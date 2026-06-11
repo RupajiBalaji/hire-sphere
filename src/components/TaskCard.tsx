@@ -12,6 +12,8 @@ export type Task = {
   deadline: string;
   time: string;
   accent?: string;
+  description?: string;
+  guidelines?: string[];
 };
 
 const difficultyStyle: Record<Task["difficulty"], string> = {

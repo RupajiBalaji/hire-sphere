@@ -1,7 +1,8 @@
- import { createFileRoute } from "@tanstack/react-router";
+ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ScreenHeader } from "@/components/MobileShell";
-import { Star, Bookmark, MessageCircle, ExternalLink } from "lucide-react";
+import { Star, Bookmark, MessageCircle, ExternalLink, Users, ChevronDown } from "lucide-react";
+import { getSubmissions } from "@/lib/api/tasks";
 import {
   getShortlistedCandidates,
   shortlistCandidate,
@@ -43,7 +44,13 @@ const candidates: Candidate[] = [
 ];
 
 function Review() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { data: submissions = [] } = useQuery({
+    queryKey: ["submissions"],
+    queryFn: getSubmissions,
+  });
 
   const { data: shortlistedCandidates = [] } = useQuery({
     queryKey: ["shortlisted-candidates"],
@@ -61,122 +68,116 @@ function Review() {
     <div>
       <ScreenHeader
         title="Candidate review"
-        subtitle={`${candidates.length} new submissions`}
+        subtitle={submissions.length > 0 ? `${submissions.length} new submission${submissions.length > 1 ? "s" : ""}` : "No submissions"}
       />
 
       <div className="space-y-4 px-5 pb-10 pt-4">
-        {candidates.map((candidate) => {
-          const isShortlisted = shortlistedCandidates.some(
-            (item) => item.name === candidate.name,
-          );
+        {submissions.length === 0 ? (
+          <div className="space-y-4 pt-4">
+            {/* Empty state card */}
+            <div className="rounded-3xl border border-dashed border-border bg-card p-6 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-3">
+                <Users className="h-6 w-6" />
+              </div>
+              <h3 className="text-sm font-bold text-foreground">No candidate submissions yet</h3>
+              <p className="mt-1 text-xs text-muted-foreground leading-relaxed max-w-[280px] mx-auto">
+                Once students start submitting solutions to your posted tasks, their profiles and work will appear here.
+              </p>
+            </div>
 
-          return (
-            <div
-              key={candidate.name}
-              className="overflow-hidden rounded-3xl border border-border bg-card shadow-card"
-            >
-              <div
-                className="h-28 w-full"
-                style={{ background: candidate.preview }}
-              >
-                <div className="flex h-full items-end justify-between p-4 text-primary-foreground">
-                  <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold backdrop-blur">
-                    Submission preview
-                  </span>
-
-                  <button
-                    type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 backdrop-blur"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </button>
+            {/* Outline Tasks / Skeleton submissions list */}
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 mt-4 mb-2">Outline Tasks (Expected Applications)</p>
+            {[1, 2].map((i) => (
+              <div key={i} className="rounded-3xl border border-dashed border-border bg-card/50 p-5"
+                style={{ opacity: 1 - (i - 1) * 0.3 }}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-2xl bg-muted/40 animate-pulse" />
+                    <div>
+                      <div className="h-3 w-28 rounded-full bg-muted/50 animate-pulse mb-1.5" />
+                      <div className="h-2 w-20 rounded-full bg-muted/30 animate-pulse" />
+                    </div>
+                  </div>
+                  <div className="h-5 w-12 rounded-full bg-muted/30 animate-pulse" />
+                </div>
+                <div className="mt-3.5 space-y-2">
+                  <div className="h-2 w-full rounded-full bg-muted/20 animate-pulse" />
+                  <div className="h-2 w-5/6 rounded-full bg-muted/20 animate-pulse" />
+                </div>
+                <div className="mt-4 flex gap-2">
+                  <div className="h-9 w-9 rounded-xl bg-muted/20 animate-pulse" />
+                  <div className="h-9 w-9 rounded-xl bg-muted/20 animate-pulse" />
+                  <div className="h-9 flex-1 rounded-xl bg-muted/30 animate-pulse" />
                 </div>
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {submissions.map((submission) => {
+              const candidateName = "Student Applicant";
+              const candidateSchool = "Self-Taught Developer";
+              const isShortlisted = shortlistedCandidates.some(
+                (item) => item.name === candidateName && item.task === submission.taskTitle
+              );
 
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-primary text-base font-extrabold text-primary-foreground">
-                      {candidate.name[0]}
-                    </div>
-
-                    <div>
-                      <p className="text-sm font-bold">{candidate.name}</p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {candidate.school}
-                      </p>
+              return (
+                <div
+                  key={submission.taskId}
+                  className="overflow-hidden rounded-3xl border border-border bg-card shadow-card"
+                >
+                  <div
+                    className="h-24 w-full bg-gradient-primary"
+                  >
+                    <div className="flex h-full items-end justify-between p-4 text-primary-foreground">
+                      <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold backdrop-blur">
+                        Submitted solution
+                      </span>
                     </div>
                   </div>
 
-                  <span className="flex items-center gap-1 rounded-full bg-warning/15 px-2.5 py-1 text-[11px] font-bold text-warning-foreground">
-                    <Star className="h-3 w-3 fill-current" />
-                    {candidate.rating}
-                  </span>
+                  <div className="p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-primary text-base font-extrabold text-primary-foreground">
+                          {candidateName[0]}
+                        </div>
+
+                        <div>
+                          <p className="text-sm font-bold">{candidateName}</p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {candidateSchool}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="rounded-full bg-success/15 px-2.5 py-1 text-[10px] font-bold text-success">
+                        {submission.status}
+                      </span>
+                    </div>
+
+                    <p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      For: {submission.taskTitle}
+                    </p>
+
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Company: {submission.company} · Submitted {new Date(submission.submittedAt).toLocaleDateString()}
+                    </p>
+
+                    <div className="mt-4 flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => navigate({ to: `/app/tasks/${submission.taskId}` })}
+                        className="flex flex-1 items-center justify-center rounded-2xl bg-gradient-primary py-2.5 text-xs font-bold text-primary-foreground shadow-glow"
+                      >
+                        View task details
+                      </button>
+                    </div>
+                  </div>
                 </div>
-
-                <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                  For: {candidate.task}
-                </p>
-
-                <p className="mt-1.5 text-sm leading-relaxed text-foreground">
-                  {candidate.note}
-                </p>
-
-                <div className="mt-3 flex gap-1.5">
-                  {candidate.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {isShortlisted && (
-                  <p className="mt-4 rounded-xl bg-success/10 px-3 py-2 text-xs font-bold text-success">
-                    Candidate added to your shortlist.
-                  </p>
-                )}
-
-                {shortlistMutation.isError && (
-                  <p className="mt-4 rounded-xl bg-destructive/10 px-3 py-2 text-xs font-bold text-destructive">
-                    Could not shortlist candidate. Please try again.
-                  </p>
-                )}
-
-                <div className="mt-4 flex gap-2">
-                  <button
-                    type="button"
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-card text-muted-foreground"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                  </button>
-
-                  <button
-                    type="button"
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-card text-muted-foreground"
-                  >
-                    <Bookmark className="h-4 w-4" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => shortlistMutation.mutate(candidate)}
-                    disabled={isShortlisted || shortlistMutation.isPending}
-                    className="flex flex-1 items-center justify-center rounded-2xl bg-gradient-primary text-sm font-bold text-primary-foreground shadow-glow disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {shortlistMutation.isPending
-                      ? "Shortlisting..."
-                      : isShortlisted
-                        ? "Shortlisted"
-                        : "Shortlist"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

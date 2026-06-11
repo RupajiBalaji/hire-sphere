@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Search, Bell } from "lucide-react";
+import { Search, Settings } from "lucide-react";
 import { useState } from "react";
 import { ProgressCard } from "@/components/ProgressCard";
 import { QuickStats } from "@/components/QuickStats";
@@ -10,6 +10,8 @@ import { RecentActivity } from "@/components/RecentActivity";
 import { RecruiterOpportunities } from "@/components/RecruiterOpportunities";
 import { DailyChallenge } from "@/components/DailyChallenge";
 import { getCurrentUser } from "@/lib/api/auth";
+import { getFullProfile } from "@/lib/api/profile";
+import { getUserStats } from "@/lib/api/userStats";
 import { getTasks } from "@/lib/api/tasks";
 
 export const Route = createFileRoute("/app/")({
@@ -34,7 +36,25 @@ function Home() {
     queryFn: getCurrentUser,
   });
 
+  const { data: profile } = useQuery({
+    queryKey: ["full-profile"],
+    queryFn: getFullProfile,
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ["user-stats"],
+    queryFn: getUserStats,
+  });
+
   const displayName = user?.name?.split(" ")[0] ?? user?.email?.split("@")[0] ?? "there";
+  const initial = (user?.name || user?.email || "U").charAt(0).toUpperCase();
+  const userSkills = profile?.skills ?? [];
+
+  // real stats — zero until earned
+  const tasksCompleted = stats?.tasksCompleted ?? 0;
+  const verifiedSkills = stats?.verifiedSkills ?? 0;
+  const streakDays = stats?.streakDays ?? 0;
+  const pointsEarned = stats?.pointsEarned ?? 0;
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,70 +87,87 @@ function Home() {
   return (
     <div className="flex flex-col pb-4">
       {/* Header Section */}
-      <header className="bg-gradient-hero px-5 pb-10 pt-10 text-primary-foreground">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
-              {new Date().toLocaleDateString("en-US", {
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-              })}
+      <header className="bg-gradient-hero px-5 pb-16 pt-10 text-primary-foreground">
+        <div className="flex items-center gap-3">
+          {/* Left: profile avatar */}
+          <Link
+            to="/app/profile"
+            className="relative flex-shrink-0"
+            aria-label="View profile"
+          >
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/25 text-lg font-extrabold text-white ring-2 ring-white/40 backdrop-blur transition-transform hover:scale-105 overflow-hidden">
+              {profile?.avatar ? (
+                <img src={profile.avatar} alt={user?.name ?? "Profile"} className="h-full w-full object-cover" />
+              ) : (
+                initial
+              )}
+            </div>
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-primary bg-success" />
+          </Link>
+
+          {/* Greeting — full width */}
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60">
+              {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
             </p>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight">
+            <h1 className="mt-0.5 text-[22px] font-extrabold tracking-tight leading-tight">
               Hey {displayName} 👋
             </h1>
-            <p className="mt-1 text-sm text-white/85">
-              You're 2 tasks away from <span className="font-bold">Verified Skill</span>.
+            <p className="mt-0.5 text-xs text-white/75">
+              2 tasks away from <span className="font-bold text-white">Verified Skill</span>
             </p>
           </div>
 
           <Link
-            to="/app/notifications"
-            className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 backdrop-blur transition-all hover:bg-white/20"
+            to="/app/settings"
+            aria-label="Candidate settings"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/20 transition-colors hover:bg-white/25"
           >
-            <Bell className="h-5 w-5" />
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-success ring-2 ring-primary" />
+            <Settings className="h-4 w-4 text-white" />
           </Link>
         </div>
 
-        <form onSubmit={handleSearch} className="mt-6 flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3.5 text-foreground shadow-elevated">
-          <Search className="h-4 w-4 text-muted-foreground" />
+        <form onSubmit={handleSearch} className="mt-5 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-foreground shadow-elevated">
+          <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search tasks, skills, recruiters"
-            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            placeholder="Search tasks, skills, recruiters…"
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/60"
           />
-          <button
-            type="submit"
-            className="rounded-lg bg-muted px-2 py-1 text-[10px] font-bold text-muted-foreground hover:bg-muted/80 transition-all"
-          >
-            ⌘K
-          </button>
+          <kbd className="rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground">⌘K</kbd>
         </form>
       </header>
 
-      {/* Main Content */}
-      <div className="space-y-6 px-5 py-6">
+      {/* Cards overlap the header */}
+      <div className="-mt-8 space-y-4 px-4 pb-6">
         {/* Progress Card */}
-        <ProgressCard />
+        <ProgressCard tasksCompleted={tasksCompleted} />
 
         {/* Quick Stats */}
-        <QuickStats />
+        <QuickStats
+          tasksCompleted={tasksCompleted}
+          verifiedSkills={verifiedSkills}
+          streakDays={streakDays}
+          pointsEarned={pointsEarned}
+        />
 
         {/* Daily Challenge */}
         <DailyChallenge />
 
         {/* Featured/Recommended Tasks */}
-        <FeaturedTasks tasks={tasks} />
+        <FeaturedTasks tasks={tasks} userSkills={userSkills} />
 
         {/* Suggested Skills */}
-        <SuggestedSkills />
+        <SuggestedSkills tasks={tasks} userSkills={userSkills} />
 
         {/* Recent Activity Feed */}
-        <RecentActivity />
+        <RecentActivity
+          tasksCompleted={tasksCompleted}
+          streakDays={streakDays}
+          verifiedSkills={verifiedSkills}
+        />
 
         {/* Recruiter Opportunities */}
         <RecruiterOpportunities />

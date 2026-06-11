@@ -179,10 +179,7 @@ function TaskDetail() {
 
         <Section title="About this task">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            We're rebuilding the landing experience for our new flagship product.
-            Your task is to craft a high-conversion landing page concept — hero,
-            value props, social proof, and CTA. Bring your taste, defend your
-            decisions, and make it feel premium.
+            {task.description || "We're rebuilding the landing experience for our new flagship product. Your task is to craft a high-conversion landing page concept — hero, value props, social proof, and CTA. Bring your taste, defend your decisions, and make it feel premium."}
           </p>
         </Section>
 
@@ -201,11 +198,14 @@ function TaskDetail() {
 
         <Section title="Submission guidelines">
           <ul className="space-y-2.5">
-            {[
-              "Figma file or hosted prototype link",
-              "100-word rationale for layout decisions",
-              "Mobile + desktop frames at minimum",
-            ].map((guideline) => (
+            {(task.guidelines && task.guidelines.length > 0
+              ? task.guidelines
+              : [
+                  "Figma file or hosted prototype link",
+                  "100-word rationale for layout decisions",
+                  "Mobile + desktop frames at minimum",
+                ]
+            ).map((guideline) => (
               <li
                 key={guideline}
                 className="flex items-start gap-2.5 text-sm text-foreground"

@@ -1,90 +1,62 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
-interface Opportunity {
-  id: string;
-  company: string;
-  logo: string;
-  position: string;
-  match: number;
-  skills: string[];
-}
-
 export function RecruiterOpportunities() {
-  const opportunities: Opportunity[] = [
-    {
-      id: "1",
-      company: "TechStartup Inc",
-      logo: "T",
-      position: "Senior React Developer",
-      match: 95,
-      skills: ["React", "TypeScript", "Node.js"],
-    },
-    {
-      id: "2",
-      company: "DesignCorp",
-      logo: "D",
-      position: "UI/UX Designer",
-      match: 87,
-      skills: ["Figma", "UI Design", "Prototyping"],
-    },
-  ];
-
   return (
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-foreground">
-            Job Opportunities
-          </h2>
+          <h2 className="text-lg font-bold text-foreground">Job Opportunities</h2>
           <p className="mt-1 text-xs text-muted-foreground">
             Matching your verified skills
           </p>
         </div>
         <Link
-          to="/app/notifications"
+          to="/app/jobs"
           className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80"
         >
           View All <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
 
+      {/* Ghost outlines — real jobs appear once recruiters post them */}
       <div className="mt-4 space-y-3">
-        {opportunities.map((opp) => (
-          <Link
-            key={opp.id}
-            to="/app/notifications"
-            className="block rounded-2xl border border-border bg-card p-4 shadow-card transition-all hover:border-primary hover:shadow-elevated"
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            className="rounded-2xl border border-dashed border-border bg-card p-4"
+            style={{ opacity: 1 - (i - 1) * 0.25 }}
           >
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-primary text-sm font-bold text-primary-foreground">
-                {opp.logo}
-              </div>
-              <div className="flex-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {opp.company}
-                </p>
-                <p className="mt-1 font-bold text-foreground">{opp.position}</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {opp.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-full bg-muted px-2 py-1 text-[10px] font-medium text-muted-foreground"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+              {/* company logo placeholder */}
+              <div className="h-10 w-10 shrink-0 rounded-2xl border border-dashed border-border bg-muted/40" />
+
+              <div className="flex-1 space-y-2">
+                {/* company name line */}
+                <div className="h-2 w-20 rounded-full bg-muted/60" />
+                {/* role title line */}
+                <div className="h-3.5 w-44 rounded-full bg-muted/50" />
+                {/* skill tag pills */}
+                <div className="flex gap-1.5 pt-0.5">
+                  <div className="h-5 w-12 rounded-full bg-muted/40" />
+                  <div className="h-5 w-16 rounded-full bg-muted/35" />
+                  <div className="h-5 w-14 rounded-full bg-muted/30" />
                 </div>
               </div>
-              <div className="text-right">
-                <span className="rounded-full bg-success/10 px-2.5 py-1 text-xs font-bold text-success">
-                  {opp.match}% match
-                </span>
-              </div>
+
+              {/* match badge placeholder */}
+              <div className="h-6 w-16 shrink-0 rounded-full bg-muted/40" />
             </div>
-          </Link>
+          </div>
         ))}
       </div>
+
+      <p className="mt-3 text-center text-[11px] text-muted-foreground">
+        Job listings will appear here once recruiters join.{" "}
+        <Link to="/app/jobs" className="font-semibold text-primary">
+          See Jobs →
+        </Link>
+      </p>
     </div>
   );
 }

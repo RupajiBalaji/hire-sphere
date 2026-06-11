@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as RoleRouteImport } from './routes/role'
+import { Route as RecruiterSignupRouteImport } from './routes/recruiter-signup'
+import { Route as RecruiterLoginRouteImport } from './routes/recruiter-login'
 import { Route as RecruiterRouteImport } from './routes/recruiter'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -19,12 +21,18 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RecruiterIndexRouteImport } from './routes/recruiter.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as RecruiterSettingsRouteImport } from './routes/recruiter.settings'
 import { Route as RecruiterReviewRouteImport } from './routes/recruiter.review'
+import { Route as RecruiterProfileRouteImport } from './routes/recruiter.profile'
+import { Route as RecruiterNotificationsRouteImport } from './routes/recruiter.notifications'
+import { Route as RecruiterEditProfileRouteImport } from './routes/recruiter.edit-profile'
 import { Route as RecruiterCreateRouteImport } from './routes/recruiter.create'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppMyWorkRouteImport } from './routes/app.my-work'
+import { Route as AppJobsRouteImport } from './routes/app.jobs'
+import { Route as AppEditProfileRouteImport } from './routes/app.edit-profile'
 import { Route as AppTasksIndexRouteImport } from './routes/app.tasks.index'
 import { Route as AppTasksIdRouteImport } from './routes/app.tasks.$id'
 
@@ -36,6 +44,16 @@ const SignupRoute = SignupRouteImport.update({
 const RoleRoute = RoleRouteImport.update({
   id: '/role',
   path: '/role',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecruiterSignupRoute = RecruiterSignupRouteImport.update({
+  id: '/recruiter-signup',
+  path: '/recruiter-signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecruiterLoginRoute = RecruiterLoginRouteImport.update({
+  id: '/recruiter-login',
+  path: '/recruiter-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecruiterRoute = RecruiterRouteImport.update({
@@ -78,9 +96,29 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const RecruiterSettingsRoute = RecruiterSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => RecruiterRoute,
+} as any)
 const RecruiterReviewRoute = RecruiterReviewRouteImport.update({
   id: '/review',
   path: '/review',
+  getParentRoute: () => RecruiterRoute,
+} as any)
+const RecruiterProfileRoute = RecruiterProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => RecruiterRoute,
+} as any)
+const RecruiterNotificationsRoute = RecruiterNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => RecruiterRoute,
+} as any)
+const RecruiterEditProfileRoute = RecruiterEditProfileRouteImport.update({
+  id: '/edit-profile',
+  path: '/edit-profile',
   getParentRoute: () => RecruiterRoute,
 } as any)
 const RecruiterCreateRoute = RecruiterCreateRouteImport.update({
@@ -108,6 +146,16 @@ const AppMyWorkRoute = AppMyWorkRouteImport.update({
   path: '/my-work',
   getParentRoute: () => AppRoute,
 } as any)
+const AppJobsRoute = AppJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEditProfileRoute = AppEditProfileRouteImport.update({
+  id: '/edit-profile',
+  path: '/edit-profile',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -126,14 +174,22 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/recruiter': typeof RecruiterRouteWithChildren
+  '/recruiter-login': typeof RecruiterLoginRoute
+  '/recruiter-signup': typeof RecruiterSignupRoute
   '/role': typeof RoleRoute
   '/signup': typeof SignupRoute
+  '/app/edit-profile': typeof AppEditProfileRoute
+  '/app/jobs': typeof AppJobsRoute
   '/app/my-work': typeof AppMyWorkRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
   '/recruiter/create': typeof RecruiterCreateRoute
+  '/recruiter/edit-profile': typeof RecruiterEditProfileRoute
+  '/recruiter/notifications': typeof RecruiterNotificationsRoute
+  '/recruiter/profile': typeof RecruiterProfileRoute
   '/recruiter/review': typeof RecruiterReviewRoute
+  '/recruiter/settings': typeof RecruiterSettingsRoute
   '/app/': typeof AppIndexRoute
   '/recruiter/': typeof RecruiterIndexRoute
   '/app/tasks/$id': typeof AppTasksIdRoute
@@ -144,14 +200,22 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
+  '/recruiter-login': typeof RecruiterLoginRoute
+  '/recruiter-signup': typeof RecruiterSignupRoute
   '/role': typeof RoleRoute
   '/signup': typeof SignupRoute
+  '/app/edit-profile': typeof AppEditProfileRoute
+  '/app/jobs': typeof AppJobsRoute
   '/app/my-work': typeof AppMyWorkRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
   '/recruiter/create': typeof RecruiterCreateRoute
+  '/recruiter/edit-profile': typeof RecruiterEditProfileRoute
+  '/recruiter/notifications': typeof RecruiterNotificationsRoute
+  '/recruiter/profile': typeof RecruiterProfileRoute
   '/recruiter/review': typeof RecruiterReviewRoute
+  '/recruiter/settings': typeof RecruiterSettingsRoute
   '/app': typeof AppIndexRoute
   '/recruiter': typeof RecruiterIndexRoute
   '/app/tasks/$id': typeof AppTasksIdRoute
@@ -165,14 +229,22 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/recruiter': typeof RecruiterRouteWithChildren
+  '/recruiter-login': typeof RecruiterLoginRoute
+  '/recruiter-signup': typeof RecruiterSignupRoute
   '/role': typeof RoleRoute
   '/signup': typeof SignupRoute
+  '/app/edit-profile': typeof AppEditProfileRoute
+  '/app/jobs': typeof AppJobsRoute
   '/app/my-work': typeof AppMyWorkRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
   '/recruiter/create': typeof RecruiterCreateRoute
+  '/recruiter/edit-profile': typeof RecruiterEditProfileRoute
+  '/recruiter/notifications': typeof RecruiterNotificationsRoute
+  '/recruiter/profile': typeof RecruiterProfileRoute
   '/recruiter/review': typeof RecruiterReviewRoute
+  '/recruiter/settings': typeof RecruiterSettingsRoute
   '/app/': typeof AppIndexRoute
   '/recruiter/': typeof RecruiterIndexRoute
   '/app/tasks/$id': typeof AppTasksIdRoute
@@ -187,14 +259,22 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/recruiter'
+    | '/recruiter-login'
+    | '/recruiter-signup'
     | '/role'
     | '/signup'
+    | '/app/edit-profile'
+    | '/app/jobs'
     | '/app/my-work'
     | '/app/notifications'
     | '/app/profile'
     | '/app/settings'
     | '/recruiter/create'
+    | '/recruiter/edit-profile'
+    | '/recruiter/notifications'
+    | '/recruiter/profile'
     | '/recruiter/review'
+    | '/recruiter/settings'
     | '/app/'
     | '/recruiter/'
     | '/app/tasks/$id'
@@ -205,14 +285,22 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/profile'
+    | '/recruiter-login'
+    | '/recruiter-signup'
     | '/role'
     | '/signup'
+    | '/app/edit-profile'
+    | '/app/jobs'
     | '/app/my-work'
     | '/app/notifications'
     | '/app/profile'
     | '/app/settings'
     | '/recruiter/create'
+    | '/recruiter/edit-profile'
+    | '/recruiter/notifications'
+    | '/recruiter/profile'
     | '/recruiter/review'
+    | '/recruiter/settings'
     | '/app'
     | '/recruiter'
     | '/app/tasks/$id'
@@ -225,14 +313,22 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/recruiter'
+    | '/recruiter-login'
+    | '/recruiter-signup'
     | '/role'
     | '/signup'
+    | '/app/edit-profile'
+    | '/app/jobs'
     | '/app/my-work'
     | '/app/notifications'
     | '/app/profile'
     | '/app/settings'
     | '/recruiter/create'
+    | '/recruiter/edit-profile'
+    | '/recruiter/notifications'
+    | '/recruiter/profile'
     | '/recruiter/review'
+    | '/recruiter/settings'
     | '/app/'
     | '/recruiter/'
     | '/app/tasks/$id'
@@ -246,6 +342,8 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   RecruiterRoute: typeof RecruiterRouteWithChildren
+  RecruiterLoginRoute: typeof RecruiterLoginRoute
+  RecruiterSignupRoute: typeof RecruiterSignupRoute
   RoleRoute: typeof RoleRoute
   SignupRoute: typeof SignupRoute
 }
@@ -264,6 +362,20 @@ declare module '@tanstack/react-router' {
       path: '/role'
       fullPath: '/role'
       preLoaderRoute: typeof RoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recruiter-signup': {
+      id: '/recruiter-signup'
+      path: '/recruiter-signup'
+      fullPath: '/recruiter-signup'
+      preLoaderRoute: typeof RecruiterSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recruiter-login': {
+      id: '/recruiter-login'
+      path: '/recruiter-login'
+      fullPath: '/recruiter-login'
+      preLoaderRoute: typeof RecruiterLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/recruiter': {
@@ -322,11 +434,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/recruiter/settings': {
+      id: '/recruiter/settings'
+      path: '/settings'
+      fullPath: '/recruiter/settings'
+      preLoaderRoute: typeof RecruiterSettingsRouteImport
+      parentRoute: typeof RecruiterRoute
+    }
     '/recruiter/review': {
       id: '/recruiter/review'
       path: '/review'
       fullPath: '/recruiter/review'
       preLoaderRoute: typeof RecruiterReviewRouteImport
+      parentRoute: typeof RecruiterRoute
+    }
+    '/recruiter/profile': {
+      id: '/recruiter/profile'
+      path: '/profile'
+      fullPath: '/recruiter/profile'
+      preLoaderRoute: typeof RecruiterProfileRouteImport
+      parentRoute: typeof RecruiterRoute
+    }
+    '/recruiter/notifications': {
+      id: '/recruiter/notifications'
+      path: '/notifications'
+      fullPath: '/recruiter/notifications'
+      preLoaderRoute: typeof RecruiterNotificationsRouteImport
+      parentRoute: typeof RecruiterRoute
+    }
+    '/recruiter/edit-profile': {
+      id: '/recruiter/edit-profile'
+      path: '/edit-profile'
+      fullPath: '/recruiter/edit-profile'
+      preLoaderRoute: typeof RecruiterEditProfileRouteImport
       parentRoute: typeof RecruiterRoute
     }
     '/recruiter/create': {
@@ -364,6 +504,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMyWorkRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/jobs': {
+      id: '/app/jobs'
+      path: '/jobs'
+      fullPath: '/app/jobs'
+      preLoaderRoute: typeof AppJobsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/edit-profile': {
+      id: '/app/edit-profile'
+      path: '/edit-profile'
+      fullPath: '/app/edit-profile'
+      preLoaderRoute: typeof AppEditProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/tasks/': {
       id: '/app/tasks/'
       path: '/tasks'
@@ -382,6 +536,8 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppEditProfileRoute: typeof AppEditProfileRoute
+  AppJobsRoute: typeof AppJobsRoute
   AppMyWorkRoute: typeof AppMyWorkRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppProfileRoute: typeof AppProfileRoute
@@ -392,6 +548,8 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppEditProfileRoute: AppEditProfileRoute,
+  AppJobsRoute: AppJobsRoute,
   AppMyWorkRoute: AppMyWorkRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppProfileRoute: AppProfileRoute,
@@ -405,13 +563,21 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface RecruiterRouteChildren {
   RecruiterCreateRoute: typeof RecruiterCreateRoute
+  RecruiterEditProfileRoute: typeof RecruiterEditProfileRoute
+  RecruiterNotificationsRoute: typeof RecruiterNotificationsRoute
+  RecruiterProfileRoute: typeof RecruiterProfileRoute
   RecruiterReviewRoute: typeof RecruiterReviewRoute
+  RecruiterSettingsRoute: typeof RecruiterSettingsRoute
   RecruiterIndexRoute: typeof RecruiterIndexRoute
 }
 
 const RecruiterRouteChildren: RecruiterRouteChildren = {
   RecruiterCreateRoute: RecruiterCreateRoute,
+  RecruiterEditProfileRoute: RecruiterEditProfileRoute,
+  RecruiterNotificationsRoute: RecruiterNotificationsRoute,
+  RecruiterProfileRoute: RecruiterProfileRoute,
   RecruiterReviewRoute: RecruiterReviewRoute,
+  RecruiterSettingsRoute: RecruiterSettingsRoute,
   RecruiterIndexRoute: RecruiterIndexRoute,
 }
 
@@ -426,6 +592,8 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   RecruiterRoute: RecruiterRouteWithChildren,
+  RecruiterLoginRoute: RecruiterLoginRoute,
+  RecruiterSignupRoute: RecruiterSignupRoute,
   RoleRoute: RoleRoute,
   SignupRoute: SignupRoute,
 }

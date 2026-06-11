@@ -17,10 +17,30 @@ export async function loginUser(
   rememberMe: boolean,
   name?: string,
 ): Promise<User> {
+  // Preserve both role AND name from a previous signup if the email matches
+  let existingRole: UserRole = "candidate";
+  let existingName: string | undefined = name?.trim();
+
+  try {
+    const stored = localStorage.getItem(USER_KEY);
+    if (stored) {
+      const existing = JSON.parse(stored) as User;
+      if (existing.email?.trim().toLowerCase() === email.trim().toLowerCase()) {
+        existingRole = existing.role ?? "candidate";
+        // Keep the name from signup unless a new name was explicitly passed in
+        if (!existingName && existing.name) {
+          existingName = existing.name;
+        }
+      }
+    }
+  } catch {
+    // ignore parse errors
+  }
+
   const user: User = {
     email: email.trim(),
-    name: name?.trim(),
-    role: "candidate",
+    name: existingName,
+    role: existingRole,
     loggedIn: true,
     rememberMe,
     loggedInAt: new Date().toISOString(),

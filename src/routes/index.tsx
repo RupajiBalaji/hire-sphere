@@ -6,8 +6,15 @@ import { ArrowRight, Sparkles, CheckCircle, Users, Zap, Target, Award, TrendingU
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HireSphere — Show Your Skills, Not Just Your Resume" },
+      { title: "HireSphere — Skill. Prove. Hire." },
       { name: "description", content: "Task-based hiring for freshers and students. Prove skills with real recruiter challenges." },
+    ],
+    links: [
+      {
+        rel: "icon",
+        type: "image/jpeg",
+        href: "/hiresphere-logo.jpeg",
+      },
     ],
   }),
   component: Splash,

@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
   Bell,
+  Building2,
   ChevronRight,
-  CreditCard,
   HelpCircle,
   LogOut,
   Moon,
@@ -14,62 +14,63 @@ import { useState } from "react";
 import { ScreenHeader } from "@/components/MobileShell";
 import { logoutUser } from "@/lib/api/auth";
 
-export const Route = createFileRoute("/app/settings")({
-  component: Settings,
+export const Route = createFileRoute("/recruiter/settings")({
+  component: RecruiterSettings,
 });
 
-function Settings() {
+function RecruiterSettings() {
   const navigate = useNavigate();
 
   async function handleLogout() {
     await logoutUser();
-    navigate({ to: "/login" });
+    navigate({ to: "/recruiter-login" });
   }
 
   return (
-    <div>
+    <div className="pb-24">
       <ScreenHeader
         title="Settings"
+        subtitle="Manage your recruiter workspace"
         back={
           <button
             type="button"
-            onClick={() => navigate({ to: "/app/profile" })}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted"
+            onClick={() => navigate({ to: "/recruiter" })}
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
         }
       />
+
       <div className="px-5 pb-8 pt-4">
-        <Group title="Account">
+        <Group title="Recruiter Account">
           <Row
             icon={<User className="h-4 w-4" />}
             label="Profile details"
-            desc="Name, photo, bio"
-            onClick={() => navigate({ to: "/app/edit-profile" })}
+            desc="Name, title, photo"
+            onClick={() => navigate({ to: "/recruiter/edit-profile" })}
           />
           <Row
-            icon={<CreditCard className="h-4 w-4" />}
-            label="Subscription"
-            desc="HireSphere Pro"
-            badge="PRO"
-            onClick={() => alert("Subscription management is coming soon.")}
+            icon={<Building2 className="h-4 w-4" />}
+            label="Company details"
+            desc="Company, website, hiring focus"
+            onClick={() => navigate({ to: "/recruiter/edit-profile" })}
           />
         </Group>
 
         <Group title="Privacy & security">
           <Row
             icon={<Shield className="h-4 w-4" />}
-            label="Privacy"
-            desc="Who can see your work"
-            onClick={() => alert("Privacy controls are coming soon.")}
+            label="Candidate visibility"
+            desc="Control what candidates can see"
+            onClick={() => alert("Candidate visibility controls are coming soon.")}
           />
           <Row icon={<Moon className="h-4 w-4" />} label="Appearance" desc="Light, dark, system" toggle />
         </Group>
 
         <Group title="Notifications">
-          <Row icon={<Bell className="h-4 w-4" />} label="Push notifications" toggle defaultOn />
-          <Row icon={<Bell className="h-4 w-4" />} label="Email digests" desc="Weekly" toggle />
+          <Row icon={<Bell className="h-4 w-4" />} label="Submission alerts" toggle defaultOn />
+          <Row icon={<Bell className="h-4 w-4" />} label="Weekly hiring digest" desc="Every Monday" toggle />
         </Group>
 
         <Group title="Support">
@@ -87,7 +88,7 @@ function Settings() {
         >
           <LogOut className="h-4 w-4" /> Log out
         </button>
-        <p className="mt-4 text-center text-[11px] text-muted-foreground">HireSphere v1.0</p>
+        <p className="mt-4 text-center text-[11px] text-muted-foreground">HireSphere recruiter workspace</p>
       </div>
     </div>
   );
@@ -108,7 +109,6 @@ function Row({
   icon,
   label,
   desc,
-  badge,
   toggle,
   defaultOn,
   onClick,
@@ -116,7 +116,6 @@ function Row({
   icon: React.ReactNode;
   label: string;
   desc?: string;
-  badge?: string;
   toggle?: boolean;
   defaultOn?: boolean;
   onClick?: () => void;
@@ -153,7 +152,6 @@ function Row({
         <p className="text-sm font-bold text-foreground">{label}</p>
         {desc && <p className="text-[11px] text-muted-foreground">{desc}</p>}
       </div>
-      {badge && <span className="rounded-full bg-gradient-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">{badge}</span>}
       <ChevronRight className="h-4 w-4 text-muted-foreground" />
     </button>
   );

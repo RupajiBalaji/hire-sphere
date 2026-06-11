@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, PlusCircle, Users } from "lucide-react";
+import { LayoutDashboard, PlusCircle, UserCircle, Users } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
 
 export const Route = createFileRoute("/recruiter")({
@@ -10,6 +10,7 @@ const items = [
   { to: "/recruiter", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/recruiter/create", label: "Post task", icon: PlusCircle },
   { to: "/recruiter/review", label: "Candidates", icon: Users },
+  { to: "/recruiter/profile", label: "Profile", icon: UserCircle },
 ] satisfies ReadonlyArray<{ to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }>;
 
 function RecruiterLayout() {

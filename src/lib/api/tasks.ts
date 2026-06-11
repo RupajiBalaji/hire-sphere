@@ -81,3 +81,13 @@ function getStoredSubmissions(): Submission[] {
     return [];
   }
 }
+
+export async function saveTask(task: Omit<Task, "id"> & { id?: string }): Promise<Task> {
+  const tasks = await getTasks();
+  const newTask: Task = {
+    ...task,
+    id: task.id || Math.random().toString(36).substring(2, 9),
+  };
+  localStorage.setItem(TASKS_KEY, JSON.stringify([...tasks, newTask]));
+  return newTask;
+}

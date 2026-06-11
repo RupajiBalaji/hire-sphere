@@ -72,15 +72,15 @@ function RoleSelect() {
           <div className="space-y-2 mt-4">
             <button
               onClick={() =>
-                navigate({ to: role === "recruiter" ? "/recruiter" : "/signup" })
+                navigate({ to: role === "recruiter" ? "/recruiter-signup" : "/signup" })
               }
               disabled={!role}
               className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-3 text-sm font-bold text-white shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-40 disabled:scale-100 border border-blue-500/50"
             >
               Continue <ArrowRight className="h-4 w-4" />
             </button>
-            <Link 
-              to="/login" 
+            <Link
+              to={role === "recruiter" ? "/recruiter-login" : "/login"}
               className="block text-center text-xs font-semibold text-gray-600 hover:text-blue-600 transition-colors py-1.5"
             >
               Already have an account? <span className="text-blue-600 font-bold">Log in</span>
