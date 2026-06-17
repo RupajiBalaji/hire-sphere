@@ -56,6 +56,12 @@ function Home() {
   const streakDays = stats?.streakDays ?? 0;
   const pointsEarned = stats?.pointsEarned ?? 0;
 
+  // tasks until next verified skill (every 5 tasks = 1 verified skill)
+  const tasksToNextSkill = 5 - (tasksCompleted % 5);
+  const nextSkillText = tasksToNextSkill === 5
+    ? "Complete tasks to earn verified skills"
+    : `${tasksToNextSkill} task${tasksToNextSkill > 1 ? "s" : ""} away from Verified Skill`;
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchInput.trim()) {
@@ -114,7 +120,9 @@ function Home() {
               Hey {displayName} 👋
             </h1>
             <p className="mt-0.5 text-xs text-white/75">
-              2 tasks away from <span className="font-bold text-white">Verified Skill</span>
+              {tasksCompleted > 0
+                ? <span>{nextSkillText}</span>
+                : <span>Start a task to build your proof-of-work</span>}
             </p>
           </div>
 

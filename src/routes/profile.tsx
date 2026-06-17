@@ -103,7 +103,7 @@ function Profile() {
   );
 }
 
-function StatCard({ title, value }:  { title: string; value: string }) {
+function StatCard({ title, value }:  { title: string; value: string | number }) {
   return (
     <div className="rounded-2xl bg-muted p-3 text-center">
       <div className="text-xl font-bold">{value}</div>
@@ -114,7 +114,7 @@ function StatCard({ title, value }:  { title: string; value: string }) {
   );
 }
 
-function SkillBar({ name, value }:  { title: string; value: string }) {
+function SkillBar({ name, value }:  { name: string; value: number }) {
   return (
     <div className="mt-4">
       <div className="flex justify-between">
@@ -132,7 +132,7 @@ function SkillBar({ name, value }:  { title: string; value: string }) {
   );
 }
 
-function ProjectCard({ title, badge }:  { title: string; value: string }) {
+function ProjectCard({ title, badge }:  { title: string; badge: string }) {
   return (
     <div className="mt-3 rounded-2xl border p-4">
       <h3 className="font-semibold">{title}</h3>
@@ -141,7 +141,7 @@ function ProjectCard({ title, badge }:  { title: string; value: string }) {
   );
 }
 
-function ActivityRow({ label, value }:  { title: string; value: string }) {
+function ActivityRow({ label, value }:  { label: string; value: string }) {
   return (
     <div className="flex justify-between">
       <span>{label}</span>
@@ -150,7 +150,7 @@ function ActivityRow({ label, value }:  { title: string; value: string }) {
   );
 }
 
-function Badge({ text }:  { title: string; value: string }) {
+function Badge({ text }:  { text: string }) {
   return (
     <span className="rounded-full bg-primary/10 px-3 py-2 text-sm">
       {text}

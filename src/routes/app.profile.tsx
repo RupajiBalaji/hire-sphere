@@ -7,6 +7,8 @@ import {
   ExternalLink, Sparkles, CheckCircle2,
 } from "lucide-react";
 import { getFullProfile, calcProfileStrength } from "@/lib/api/profile";
+import { getUserStats } from "@/lib/api/userStats";
+import { getSubmissions } from "@/lib/api/tasks";
 
 export const Route = createFileRoute("/app/profile")({
   component: Profile,
@@ -17,6 +19,16 @@ function Profile() {
   const { data: profile, isLoading } = useQuery({
     queryKey: ["full-profile"],
     queryFn: getFullProfile,
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ["user-stats"],
+    queryFn: getUserStats,
+  });
+
+  const { data: submissions = [] } = useQuery({
+    queryKey: ["submissions"],
+    queryFn: getSubmissions,
   });
 
   if (isLoading || !profile) {
@@ -103,9 +115,9 @@ function Profile() {
       {/* ── Stats ── */}
       <div className="grid grid-cols-3 gap-3 px-4 pt-4">
         {[
-          { l: "Tasks", v: "12" },
-          { l: "Endorsements", v: "47" },
-          { l: "Views", v: "1.2k" },
+          { l: "Tasks", v: String(stats?.tasksCompleted ?? 0) },
+          { l: "Submissions", v: String(submissions.length) },
+          { l: "Points", v: stats?.pointsEarned ? `${stats.pointsEarned}` : "0" },
         ].map((s) => (
           <div key={s.l} className="rounded-2xl border border-border bg-card p-3 text-center shadow-sm">
             <p className="text-lg font-extrabold text-foreground">{s.v}</p>

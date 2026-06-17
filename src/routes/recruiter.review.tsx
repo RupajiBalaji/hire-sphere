@@ -1,67 +1,19 @@
- import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { ScreenHeader } from "@/components/MobileShell";
-import { Star, Bookmark, MessageCircle, ExternalLink, Users, ChevronDown } from "lucide-react";
+import { Users } from "lucide-react";
 import { getSubmissions } from "@/lib/api/tasks";
-import {
-  getShortlistedCandidates,
-  shortlistCandidate,
-  type Candidate,
-} from "@/lib/api/recruiter";
 
 export const Route = createFileRoute("/recruiter/review")({
   component: Review,
 });
 
-const candidates: Candidate[] = [
-  {
-    name: "Aanya Verma",
-    school: "BITS Pilani · Final year",
-    rating: 4.8,
-    task: "Landing page concept",
-    preview: "linear-gradient(135deg,#2563EB,#6366F1)",
-    tags: ["Figma", "UI"],
-    note: "Clean hierarchy, sharp typography, ships fast.",
-  },
-  {
-    name: "Rohan Iyer",
-    school: "IIT Madras · 3rd year",
-    rating: 4.6,
-    task: "React dashboard MVP",
-    preview: "linear-gradient(135deg,#22C55E,#2563EB)",
-    tags: ["React", "TS"],
-    note: "Polished interactions, thoughtful state design.",
-  },
-  {
-    name: "Meera Khan",
-    school: "Manipal · 2nd year",
-    rating: 4.9,
-    task: "Brand identity sprint",
-    preview: "linear-gradient(135deg,#F59E0B,#EF4444)",
-    tags: ["Branding"],
-    note: "Bold mark, considered color system, strong instinct.",
-  },
-];
-
 function Review() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { data: submissions = [] } = useQuery({
     queryKey: ["submissions"],
     queryFn: getSubmissions,
-  });
-
-  const { data: shortlistedCandidates = [] } = useQuery({
-    queryKey: ["shortlisted-candidates"],
-    queryFn: getShortlistedCandidates,
-  });
-
-  const shortlistMutation = useMutation({
-    mutationFn: shortlistCandidate,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["shortlisted-candidates"] });
-    },
   });
 
   return (
@@ -117,9 +69,6 @@ function Review() {
             {submissions.map((submission) => {
               const candidateName = "Student Applicant";
               const candidateSchool = "Self-Taught Developer";
-              const isShortlisted = shortlistedCandidates.some(
-                (item) => item.name === candidateName && item.task === submission.taskTitle
-              );
 
               return (
                 <div

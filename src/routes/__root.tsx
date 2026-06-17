@@ -10,7 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+import { reportError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -38,7 +38,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    reportError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
   return (
@@ -85,11 +85,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "HireSphere is the task-based hiring platform for freshers and students. Prove your skills with real recruiter challenges." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@HireSphere" },
       { name: "twitter:title", content: "HireSphere — Show Your Skills, Not Just Your Resume" },
       { name: "twitter:description", content: "HireSphere is the task-based hiring platform for freshers and students. Prove your skills with real recruiter challenges." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a53bf1c4-8ce7-4a34-9203-bbc79e0244d2/id-preview-f80323fa--94e052db-671d-4f2b-a9b1-73b0de305773.lovable.app-1780160485076.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a53bf1c4-8ce7-4a34-9203-bbc79e0244d2/id-preview-f80323fa--94e052db-671d-4f2b-a9b1-73b0de305773.lovable.app-1780160485076.png" },
+      { property: "og:image", content: "/hiresphere-logo.jpeg" },
+      { name: "twitter:image", content: "/hiresphere-logo.jpeg" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
