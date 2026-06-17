@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { ArrowRight, Zap, BookOpen } from "lucide-react";
 import { type Task } from "@/components/TaskCard";
 
